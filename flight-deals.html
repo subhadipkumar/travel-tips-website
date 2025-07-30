@@ -44,10 +44,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Find the best flight deals for your next trip with Travel Tips Hub.">
   <title>Flight Deals - Travel Tips Hub</title>
+  <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="flight-deals.css">
 </head>
 <body>
-  <!-- Header -->
   <header class="hero">
     <nav class="navbar">
       <h1>Travel Tips Hub</h1>
@@ -61,7 +61,7 @@
         <li><a href="credit-card-deals.html">Credit Card Deals</a></li>
         <li><a href="calculator.html">Calculator</a></li>
         <li><a href="index.html#newsletter">Newsletter</a></li>
-        <li><a href="index.html#contact">Contact</a></li>
+        <li style="margin-right: 1rem;"><a href="index.html#contact">Contact</a></li>
       </ul>
     </nav>
     <div class="hero-content">
@@ -71,26 +71,24 @@
     </div>
   </header>
 
-  <!-- Search Results Section -->
   <section id="search-results" class="search-results">
     <h2>Search Results</h2>
     <div id="results-container"></div>
   </section>
 
-  <!-- Flight Deals Section -->
   <section id="deals" class="deals-section">
     <h2>Top Flight Deals</h2>
+    <div id="error-message" style="color: red; display: none;"></div>
+    <div id="loading-message">Loading flight deals...</div>
     <div id="deals-container" class="deals-container"></div>
   </section>
 
-  <!-- Back to Home CTA -->
   <section class="cta-section">
     <h2>Plan Your Trip</h2>
     <p>Use our calculator to estimate your travel costs.</p>
     <a href="calculator.html" class="cta-button">Calculate Now</a>
   </section>
 
-  <!-- Footer -->
   <footer class="footer">
     <p>Contact us: <a href="mailto:info@traveltipshub.com">info@traveltipshub.com</a></p>
     <div class="social-links">
@@ -102,28 +100,86 @@
 
   <script src="search.js"></script>
   <script>
-    async function fetchFlightDeals() {
+    async function fetchFlightDeals(attempt = 1, maxAttempts = 5, delay = 2000) {
+      const errorMessage = document.getElementById('error-message');
+      const loadingMessage = document.getElementById('loading-message');
+      const dealsContainer = document.getElementById('deals-container');
+
       try {
-        const response = await fetch('/netlify/functions/get_flight_deals');
-        if (!response.ok) throw new Error('Failed to fetch flight deals');
-        const deals = await response.json();
-        const container = document.getElementById('deals-container');
-        container.innerHTML = deals.map(deal => `
-          <div class="deal-card">
-            <h3>${deal.origin_city} to ${deal.destination_city}</h3>
-            <p><strong>Deal Price:</strong> $${deal.deal_price.toFixed(2)}</p>
-            <p><strong>Departure:</strong> ${new Date(deal.departure_date).toLocaleDateString()}</p>
+        console.log(`Attempt ${attempt}: Fetching from /.netlify/functions/get_flight_deals`);
+        const response = await fetch('/.netlify/functions/get_flight_deals', {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' }
+        });
+
+        console.log('Response:', {
+          status: response.status,
+          statusText: response.statusText,
+          ok: response.ok
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('Response data:', data);
+
+        loadingMessage.style.display = 'none';
+
+        if (!Array.isArray(data)) {
+          throw new Error('Invalid response format: Expected an array');
+        }
+
+        if (data.length === 0) {
+          errorMessage.textContent = 'No flight deals available at the moment.';
+          errorMessage.style.display = 'block';
+          dealsContainer.innerHTML = '';
+          return;
+        }
+
+        errorMessage.style.display = 'none';
+        dealsContainer.innerHTML = '';
+
+        data.forEach(deal => {
+          console.log('Rendering deal:', deal);
+          const dealCard = document.createElement('div');
+          dealCard.className = 'deal-card';
+          dealCard.innerHTML = `
+            <h3>${deal.origin_city || 'Unknown'} to ${deal.destination_city || 'Unknown'}</h3>
+            <p><strong>Deal Price:</strong> $${(deal.deal_price != null ? deal.deal_price.toFixed(2) : 'N/A')}</p>
+            <p><strong>Departure:</strong> ${deal.departure_date ? new Date(deal.departure_date).toLocaleDateString() : 'N/A'}</p>
             ${deal.return_date ? `<p><strong>Return:</strong> ${new Date(deal.return_date).toLocaleDateString()}</p>` : ''}
-            <p><strong>Trip Type:</strong> ${deal.trip_type}</p>
-            <p><strong>Regular Price (Previous Years):</strong> $${deal.regular_price_previous_years ? deal.regular_price_previous_years.toFixed(2) : 'N/A'}</p>
-          </div>
-        `).join('');
+            <p><strong>Trip Type:</strong> ${deal.trip_type || 'N/A'}</p>
+            <p><strong>Regular Price (Previous Years):</strong> $${deal.regular_price_previous_years != null ? deal.regular_price_previous_years.toFixed(2) : 'N/A'}</p>
+          `;
+          dealsContainer.appendChild(dealCard);
+        });
+
       } catch (error) {
-        console.error('Error loading flight deals:', error);
-        document.getElementById('deals-container').innerHTML = '<p>Error loading flight deals. Please try again later.</p>';
+        console.error(`Attempt ${attempt} failed:`, {
+          message: error.message,
+          name: error.name,
+          stack: error.stack
+        });
+
+        if (attempt < maxAttempts) {
+          loadingMessage.textContent = `Retrying... (${attempt + 1}/${maxAttempts})`;
+          setTimeout(() => fetchFlightDeals(attempt + 1, maxAttempts, delay), delay);
+          return;
+        }
+
+        loadingMessage.style.display = 'none';
+        errorMessage.textContent = `Error loading flight deals: ${error.message}. Please try again later or contact support.`;
+        errorMessage.style.display = 'block';
+        dealsContainer.innerHTML = '';
       }
     }
-    window.onload = fetchFlightDeals;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('Starting fetchFlightDeals');
+      fetchFlightDeals();
+    });
   </script>
 </body>
 </html>

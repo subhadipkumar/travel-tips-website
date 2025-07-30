@@ -4,16 +4,23 @@ export async function handler() {
   try {
     const sql = neon();
     const rows = await sql`SELECT * FROM flight_deals ORDER BY departure_date ASC`;
+    console.log('Query result:', rows); // Log raw data for debugging
     if (!rows || rows.length === 0) {
       return {
         statusCode: 200,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
         body: JSON.stringify([])
       };
     }
     return {
       statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
       body: JSON.stringify(rows)
     };
   } catch (error) {
@@ -26,7 +33,10 @@ export async function handler() {
     });
     return {
       statusCode: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
       body: JSON.stringify({ error: `Failed to fetch flight deals: ${error.message}` })
     };
   }
