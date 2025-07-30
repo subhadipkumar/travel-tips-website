@@ -1,13 +1,8 @@
-import { neon } from '@neondatabase/serverless';
+import { neon } from '@netlify/neon';
 
 export async function handler() {
   try {
-    if (!process.env.NETLIFY_DATABASE_URL) {
-      throw new Error('NETLIFY_DATABASE_URL environment variable is not set. Please configure it in Netlify Dashboard or CLI.');
-    }
-    const sql = neon(process.env.NETLIFY_DATABASE_URL, {
-      fetchOptions: { cache: 'no-store', priority: 'high' }
-    });
+    const sql = neon();
     const rows = await sql`SELECT * FROM flight_deals ORDER BY departure_date ASC`;
     if (!rows || rows.length === 0) {
       return {
