@@ -159,7 +159,7 @@
             ${deal.return_date ? `<p><strong>Return:</strong> ${new Date(deal.return_date).toLocaleDateString()}</p>` : ''}
             <p><strong>Trip Type:</strong> ${deal.trip_type || 'N/A'}</p>
             <p><strong>Regular Price (Previous Years):</strong> ${regularPrice != null && !isNaN(regularPrice) ? `$${regularPrice.toFixed(2)}` : 'N/A'}</p>
-            ${deal.Booking_Link ? `<p><a href="${deal.Booking_Link}" class="booking-link" target="_blank" rel="noopener noreferrer">Book Now</a></p>` : '<p><strong>Booking Link:</strong> Not available</p>'}
+            ${deal.booking_link ? `<p><a href="${deal.booking_link}" class="booking-link" target="_blank" rel="noopener noreferrer">Book Now</a></p>` : '<p><strong>Booking Link:</strong> Not available</p>'}
           `;
           dealsContainer.appendChild(dealCard);
         });
