@@ -4,7 +4,11 @@ export async function handler() {
   try {
     const sql = neon();
     const rows = await sql`SELECT * FROM flight_deals ORDER BY departure_date ASC`;
-    console.log('Query result:', rows); // Log raw data for debugging
+    console.log('Query result:', rows.map(row => ({
+      ...row,
+      deal_price_type: typeof row.deal_price,
+      regular_price_previous_years_type: typeof row.regular_price_previous_years
+    })));
     if (!rows || rows.length === 0) {
       return {
         statusCode: 200,
