@@ -1,0 +1,135 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Discover expert travel tips for packing, budgeting, and staying safe on your next adventure.">
+  <title>Travel Tips Hub</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header/Hero Section -->
+  <header class="hero">
+    <nav class="navbar">
+      <h1>Travel Tips Hub</h1>
+      <div class="search-container">
+        <input type="text" id="search-input" placeholder="Search tips or deals..." aria-label="Search travel tips, flight deals, credit card deals, and calculator">
+        <button id="search-button" aria-label="Search">🔍</button>
+      </div>
+      <ul>
+        <li><a href="#tips" class="active">Tips</a></li>
+        <li><a href="flight-deals.html">Flight Deals</a></li>
+        <li><a href="credit-card-deals.html">Credit Card Deals</a></li>
+        <li><a href="calculator.html">Calculator</a></li>
+        <li><a href="#newsletter">Newsletter</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="hero-content">
+      <h1>Travel Smarter: Top Tips for Your Next Adventure</h1>
+      <p>Essential advice for stress-free, budget-friendly travel.</p>
+      <a href="#tips" class="cta-button">Explore Tips</a>
+    </div>
+  </header>
+
+  <!-- Search Results Section -->
+  <section id="search-results" class="search-results">
+    <h2>Search Results</h2>
+    <div id="results-container"></div>
+  </section>
+
+  <!-- Travel Tips Section -->
+  <section id="tips" class="tips-section">
+    <h2>Expert Travel Tips</h2>
+    <div class="tips-container">
+      <div class="tip-card">
+        <h3>Packing Tips</h3>
+        <ul>
+          <li>Roll clothes to save space in your luggage.</li>
+          <li>Pack versatile clothing for multiple occasions.</li>
+          <li>Use packing cubes for better organization.</li>
+          <li>Bring a reusable water bottle to stay hydrated.</li>
+        </ul>
+      </div>
+      <div class="tip-card">
+        <h3>Budget Travel</h3>
+        <ul>
+          <li>Book flights on Tuesdays for better deals.</li>
+          <li>Use local transport apps to save on fares.</li>
+          <li>Eat at local markets instead of tourist restaurants.</li>
+          <li>Look for free walking tours in major cities.</li>
+        </ul>
+      </div>
+      <div class="tip-card">
+        <h3>Safety & Planning</h3>
+        <ul>
+          <li>Keep digital copies of important documents.</li>
+          <li>Research local customs to avoid misunderstandings.</li>
+          <li>Use a money belt for valuables in crowded areas.</li>
+          <li>Share your itinerary with a trusted contact.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter Signup -->
+  <section id="newsletter" class="newsletter-section">
+    <h2>Join Our Travel Community</h2>
+    <p>Sign up for weekly travel tips and exclusive hacks!</p>
+    <form class="newsletter-form">
+      <input type="email" placeholder="Enter your email" required aria-label="Email address">
+      <button type="submit">Subscribe</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contact" class="footer">
+    <p>Contact us: <a href="mailto:info@traveltipshub.com">info@traveltipshub.com</a></p>
+    <div class="social-links">
+      <a href="https://x.com" target="_blank" aria-label="Follow us on X">X</a>
+      <a href="https://instagram.com" target="_blank" aria-label="Follow us on Instagram">Instagram</a>
+    </div>
+    <p>&copy; 2025 Travel Tips Hub. All rights reserved.</p>
+  </footer>
+  <script src="search.js"></script>
+</body>
+</html>

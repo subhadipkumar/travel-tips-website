@@ -1,0 +1,260 @@
+body {
+  margin: 0;
+  font-family: 'Lato', sans-serif;
+  color: #222;
+  line-height: 1.6;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(33, 37, 41, 0.8);
+  color: white;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar h1 {
+  font-family: 'Source Sans Pro', sans-serif;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  margin-right: 1rem;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.navbar a:hover {
+  color: #ffd700;
+}
+
+.navbar a.active {
+  color: #ffd700;
+  font-weight: bold;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#search-input {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  width: 150px;
+}
+
+#search-button {
+  background: #ffd700;
+  color: #222;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#search-button:hover {
+  background: #e6c200;
+}
+
+.hero {
+  background: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05') no-repeat center/cover;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  position: relative;
+  background-blend-mode: overlay;
+  background-color: rgba(33, 37, 41, 0.4); /* Subtle overlay for readability */
+}
+
+.hero-content {
+  background: rgba(33, 37, 41, 0.8); /* Increased opacity for contrast */
+  padding: 2rem;
+  border-radius: 10px;
+  z-index: 1;
+  max-width: 600px;
+}
+
+.hero h1 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+.hero p {
+  font-size: 1.2rem;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: #ffd700;
+  color: #222;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-top: 1rem;
+}
+
+.cta-button:hover {
+  background: #e6c200;
+}
+
+.search-results {
+  padding: 2rem;
+  background: #f8f9fa;
+  text-align: center;
+  display: none;
+}
+
+.search-results.active {
+  display: block;
+}
+
+.search-results h2 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 1.8rem;
+  color: #212529;
+}
+
+#results-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.result-item {
+  background: white;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.deals-section {
+  padding: 4rem 2rem;
+  background: #f8f9fa;
+  text-align: center;
+}
+
+.deals-section h2 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 2rem;
+  color: #212529;
+  margin-bottom: 2rem;
+}
+
+.deals-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.deal-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.deal-card:hover {
+  transform: translateY(-5px);
+}
+
+.deal-card h3 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 1.5rem;
+  color: #212529;
+  margin: 0 0 1rem;
+}
+
+.deal-card p {
+  margin: 0.5rem 0;
+}
+
+.deal-card p strong {
+  color: #007bff;
+}
+
+.cta-section {
+  padding: 3rem 2rem;
+  text-align: center;
+  background: #e9ecef;
+}
+
+.cta-section h2 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 2rem;
+  color: #212529;
+}
+
+.footer {
+  padding: 2rem;
+  background: #212529;
+  color: white;
+  text-align: center;
+}
+
+.social-links a {
+  color: #ffd700;
+  margin: 0 1rem;
+  text-decoration: none;
+}
+
+.social-links a:hover {
+  color: #e6c200;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .navbar {
+    flex-wrap: wrap;
+  }
+
+  .navbar ul {
+    gap: 1rem;
+    margin-right: 0.5rem;
+  }
+
+  .search-container {
+    margin: 0.5rem 0;
+  }
+
+  #search-input {
+    width: 100px;
+  }
+
+  .deals-container {
+    grid-template-columns: 1fr;
+  }
+}

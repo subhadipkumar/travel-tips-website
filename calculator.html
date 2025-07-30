@@ -1,0 +1,143 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Calculate your total trip cost including transportation, accommodation, and daily expenses with Travel Tips Hub.">
+  <title>Trip Cost Calculator - Travel Tips Hub</title>
+  <link rel="stylesheet" href="calculator.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="hero">
+    <nav class="navbar">
+      <h1>Travel Tips Hub</h1>
+      <div class="search-container">
+        <input type="text" id="search-input" placeholder="Search tips or deals..." aria-label="Search travel tips, flight deals, credit card deals, and calculator">
+        <button id="search-button" aria-label="Search">🔍</button>
+      </div>
+      <ul>
+        <li><a href="index.html#tips">Tips</a></li>
+        <li><a href="flight-deals.html">Flight Deals</a></li>
+        <li><a href="credit-card-deals.html">Credit Card Deals</a></li>
+        <li><a href="calculator.html" class="active">Calculator</a></li>
+        <li><a href="index.html#newsletter">Newsletter</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="hero-content">
+      <h1>Plan Your Trip Budget</h1>
+      <p>Calculate your total trip cost with our easy-to-use calculator.</p>
+      <a href="#calculator" class="cta-button">Start Calculating</a>
+    </div>
+  </header>
+
+  <!-- Search Results Section -->
+  <section id="search-results" class="search-results">
+    <h2>Search Results</h2>
+    <div id="results-container"></div>
+  </section>
+
+  <!-- Calculator Section -->
+  <section id="calculator" class="calculator-section">
+    <h2>Trip Cost Calculator</h2>
+    <form id="trip-cost-form">
+      <div class="form-group">
+        <label for="trip-days">Number of Trip Days:</label>
+        <input type="number" id="trip-days" min="1" step="1" placeholder="1" aria-label="Number of Trip Days">
+      </div>
+      <div class="form-group">
+        <label for="uber-to-airport">Home to Airport Uber Cost ($):</label>
+        <input type="number" id="uber-to-airport" min="0" step="0.01" placeholder="0.00" aria-label="Home to Airport Uber Cost">
+      </div>
+      <div class="form-group">
+        <label for="uber-from-airport">Back to Home Uber Cost ($):</label>
+        <input type="number" id="uber-from-airport" min="0" step="0.01" placeholder="0.00" aria-label="Back to Home Uber Cost">
+      </div>
+      <div class="form-group">
+        <label for="flight-cost">Flight Cost ($):</label>
+        <input type="number" id="flight-cost" min="0" step="0.01" placeholder="0.00" aria-label="Flight Cost">
+      </div>
+      <div class="form-group">
+        <label for="rental-car-cost">Rental Car Cost ($):</label>
+        <input type="number" id="rental-car-cost" min="0" step="0.01" placeholder="0.00" aria-label="Rental Car Cost">
+      </div>
+      <div class="form-group">
+        <label for="daily-hotel-cost">Daily Hotel Cost ($):</label>
+        <input type="number" id="daily-hotel-cost" min="0" step="0.01" placeholder="0.00" aria-label="Daily Hotel Cost">
+      </div>
+      <div class="form-group">
+        <label for="daily-food-cost">Daily Food Cost ($):</label>
+        <input type="number" id="daily-food-cost" min="0" step="0.01" placeholder="0.00" aria-label="Daily Food Cost">
+      </div>
+      <div class="form-group">
+        <label for="daily-other-cost">Daily Other Expenses ($):</label>
+        <input type="number" id="daily-other-cost" min="0" step="0.01" placeholder="0.00" aria-label="Daily Other Expenses">
+      </div>
+      <div class="form-group">
+        <label for="gas-cost">Gas Cost ($):</label>
+        <input type="number" id="gas-cost" min="0" step="0.01" placeholder="0.00" aria-label="Gas Cost">
+      </div>
+    </form>
+    <div id="result" class="result"></div>
+  </section>
+
+  <!-- Back to Home CTA -->
+  <section class="cta-section">
+    <h2>Need More Travel Tips?</h2>
+    <p>Explore our expert advice on packing, budgeting, and more.</p>
+    <a href="index.html#tips" class="cta-button">Back to Tips</a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Contact us: <a href="mailto:info@traveltipshub.com">info@traveltipshub.com</a></p>
+    <div class="social-links">
+      <a href="https://x.com" target="_blank" aria-label="Follow us on X">X</a>
+      <a href="https://instagram.com" target="_blank" aria-label="Follow us on Instagram">Instagram</a>
+    </div>
+    <p>&copy; 2025 Travel Tips Hub. All rights reserved.</p>
+  </footer>
+  <script src="search.js"></script>
+  <script src="calculator.js"></script>
+</body>
+</html>

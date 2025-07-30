@@ -1,0 +1,269 @@
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  color: #222;
+  line-height: 1.6;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(0, 43, 91, 0.8);
+  color: white;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar h1 {
+  font-family: 'Rubik', sans-serif;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  margin-right: 1rem;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.navbar a:hover {
+  color: #00d4ff;
+}
+
+.navbar a.active {
+  color: #00d4ff;
+  font-weight: bold;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#search-input {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  width: 150px;
+}
+
+#search-button {
+  background: #00d4ff;
+  color: #222;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#search-button:hover {
+  background: #00b8d4;
+}
+
+.hero {
+  background: url('https://images.unsplash.com/photo-1587145820266-a5951ee6f620') no-repeat center/cover;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  position: relative;
+  background-blend-mode: overlay;
+  background-color: rgba(0, 43, 91, 0.4); /* Subtle overlay for readability */
+}
+
+.hero-content {
+  background: rgba(0, 43, 91, 0.8); /* Increased opacity for contrast */
+  padding: 2rem;
+  border-radius: 10px;
+  z-index: 1;
+  max-width: 600px;
+}
+
+.hero h1 {
+  font-family: 'Rubik', sans-serif;
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+.hero p {
+  font-size: 1.2rem;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: #00d4ff;
+  color: #222;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-top: 1rem;
+}
+
+.cta-button:hover {
+  background: #00b8d4;
+}
+
+.search-results {
+  padding: 2rem;
+  background: #f1f5f9;
+  text-align: center;
+  display: none;
+}
+
+.search-results.active {
+  display: block;
+}
+
+.search-results h2 {
+  font-family: 'Rubik', sans-serif;
+  font-size: 1.8rem;
+  color: #002b5b;
+}
+
+#results-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.result-item {
+  background: white;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.calculator-section {
+  padding: 4rem 2rem;
+  background: #f1f5f9;
+  text-align: center;
+}
+
+.calculator-section h2 {
+  font-family: 'Rubik', sans-serif;
+  font-size: 2rem;
+  color: #002b5b;
+  margin-bottom: 2rem;
+}
+
+#trip-cost-form {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.form-group label {
+  font-family: 'Rubik', sans-serif;
+  font-size: 1.1rem;
+  color: #002b5b;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.result {
+  margin-top: 2rem;
+  font-size: 1.2rem;
+  color: #002b5b;
+  font-family: 'Rubik', sans-serif;
+}
+
+#result ul {
+  list-style: none;
+  padding: 0;
+}
+
+#result li {
+  margin: 0.5rem 0;
+}
+
+.cta-section {
+  padding: 3rem 2rem;
+  text-align: center;
+  background: #e5e9ed;
+}
+
+.cta-section h2 {
+  font-family: 'Rubik', sans-serif;
+  font-size: 2rem;
+  color: #002b5b;
+}
+
+.footer {
+  padding: 2rem;
+  background: #002b5b;
+  color: white;
+  text-align: center;
+}
+
+.social-links a {
+  color: #00d4ff;
+  margin: 0 1rem;
+  text-decoration: none;
+}
+
+.social-links a:hover {
+  color: #00b8d4;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .navbar {
+    flex-wrap: wrap;
+  }
+
+  .navbar ul {
+    gap: 1rem;
+    margin-right: 0.5rem;
+  }
+
+  .search-container {
+    margin: 0.5rem 0;
+  }
+
+  #search-input {
+    width: 100px;
+  }
+
+  #trip-cost-form {
+    padding: 0 1rem;
+  }
+}

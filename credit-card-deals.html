@@ -1,0 +1,133 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Discover the best credit card deals and hacks for travelers with Travel Tips Hub.">
+  <title>Credit Card Deals - Travel Tips Hub</title>
+  <link rel="stylesheet" href="credit-card-deals.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="hero">
+    <nav class="navbar">
+      <h1>Travel Tips Hub</h1>
+      <div class="search-container">
+        <input type="text" id="search-input" placeholder="Search tips or deals..." aria-label="Search travel tips, flight deals, credit card deals, and calculator">
+        <button id="search-button" aria-label="Search">🔍</button>
+      </div>
+      <ul>
+        <li><a href="index.html#tips">Tips</a></li>
+        <li><a href="flight-deals.html">Flight Deals</a></li>
+        <li><a href="credit-card-deals.html" class="active">Credit Card Deals</a></li>
+        <li><a href="calculator.html">Calculator</a></li>
+        <li><a href="index.html#newsletter">Newsletter</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="hero-content">
+      <h1>Maximize Your Travel with Credit Card Deals</h1>
+      <p>Unlock rewards and savings with these credit card tips and hacks.</p>
+      <a href="#deals" class="cta-button">Explore Deals</a>
+    </div>
+    <img src="https://images.unsplash.com/photo-1586880247571-298b6e9e0e6b" alt="Credit card" class="credit-card-image">
+  </header>
+
+  <!-- Search Results Section -->
+  <section id="search-results" class="search-results">
+    <h2>Search Results</h2>
+    <div id="results-container"></div>
+  </section>
+
+  <!-- Credit Card Deals Section -->
+  <section id="deals" class="deals-section">
+    <h2>Top Credit Card Deals & Hacks</h2>
+    <div class="deals-container">
+      <div class="deal-card">
+        <h3>Choose the Right Card</h3>
+        <p>Select cards that align with your travel goals.</p>
+        <ul>
+          <li>Opt for cards with no foreign transaction fees.</li>
+          <li>Look for sign-up bonuses offering travel points.</li>
+          <li>Choose cards with lounge access for long layovers.</li>
+        </ul>
+      </div>
+      <div class="deal-card">
+        <h3>Reward Hacks</h3>
+        <p>Maximize points and miles for free travel.</p>
+        <ul>
+          <li>Use cards for everyday purchases to earn points.</li>
+          <li>Redeem points for flights during off-peak seasons.</li>
+          <li>Transfer points to airline or hotel partners for better value.</li>
+        </ul>
+      </div>
+      <div class="deal-card">
+        <h3>Recommended Cards</h3>
+        <p>Top cards for travelers in 2025.</p>
+        <ul>
+          <li><a href="https://www.chase.com" target="_blank">Chase Sapphire Preferred</a>: Great for travel rewards.</li>
+          <li><a href="https://www.americanexpress.com" target="_blank">Amex Platinum</a>: Premium perks like lounge access.</li>
+          <li><a href="https://www.capitalone.com" target="_blank">Capital One Venture</a>: Flexible miles redemption.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Back to Home CTA -->
+  <section class="cta-section">
+    <h2>Need More Travel Tips?</h2>
+    <p>Explore our expert advice on packing, budgeting, and more.</p>
+    <a href="index.html#tips" class="cta-button">Back to Tips</a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Contact us: <a href="mailto:info@traveltipshub.com">info@traveltipshub.com</a></p>
+    <div class="social-links">
+      <a href="https://x.com" target="_blank" aria-label="Follow us on X">X</a>
+      <a href="https://instagram.com" target="_blank" aria-label="Follow us on Instagram">Instagram</a>
+    </div>
+    <p>&copy; 2025 Travel Tips Hub. All rights reserved.</p>
+  </footer>
+  <script src="search.js"></script>
+</body>
+</html>
