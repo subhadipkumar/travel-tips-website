@@ -143,17 +143,23 @@
 
         data.forEach(deal => {
           console.log('Rendering deal:', deal);
-          const dealPrice = parseFloat(deal.deal_price); // Convert to number
-          const regularPrice = parseFloat(deal.regular_price_previous_years); // Convert to number
+          const dealPrice = deal.deal_price != null ? Number(deal.deal_price) : null;
+          const regularPrice = deal.regular_price_previous_years != null ? Number(deal.regular_price_previous_years) : null;
+
+          if (dealPrice != null && isNaN(dealPrice)) {
+            console.warn(`Invalid deal_price for ${deal.origin_city} to ${deal.destination_city}:`, deal.deal_price);
+          }
+
           const dealCard = document.createElement('div');
           dealCard.className = 'deal-card';
           dealCard.innerHTML = `
             <h3>${deal.origin_city || 'Unknown'} to ${deal.destination_city || 'Unknown'}</h3>
-            <p><strong>Deal Price:</strong> $${isNaN(dealPrice) ? 'N/A' : dealPrice.toFixed(2)}</p>
+            <p><strong>Deal Price:</strong> ${dealPrice != null && !isNaN(dealPrice) ? `$${dealPrice.toFixed(2)}` : 'N/A'}</p>
             <p><strong>Departure:</strong> ${deal.departure_date ? new Date(deal.departure_date).toLocaleDateString() : 'N/A'}</p>
             ${deal.return_date ? `<p><strong>Return:</strong> ${new Date(deal.return_date).toLocaleDateString()}</p>` : ''}
             <p><strong>Trip Type:</strong> ${deal.trip_type || 'N/A'}</p>
-            <p><strong>Regular Price (Previous Years):</strong> $${isNaN(regularPrice) ? 'N/A' : regularPrice.toFixed(2)}</p>
+            <p><strong>Regular Price (Previous Years):</strong> ${regularPrice != null && !isNaN(regularPrice) ? `$${regularPrice.toFixed(2)}` : 'N/A'}</p>
+            ${deal.booking_link ? `<p><a href="${deal.booking_link}" class="booking-link" target="_blank" rel="noopener noreferrer">Book Now</a></p>` : '<p><strong>Booking Link:</strong> Not available</p>'}
           `;
           dealsContainer.appendChild(dealCard);
         });
